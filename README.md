@@ -19,3 +19,5 @@ Toimivat ominaisuudet
 - Käyttäjä näkee sovelluksen etusivulla listan alueista
 - Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
 - Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
+
+Sovellusta voi testata [Herokussa](https://forumharjoitustyo.herokuapp.com/)
