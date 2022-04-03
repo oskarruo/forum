@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<title>Forum</title>
+<h1>Ketjut</h1>
+{% if session.user_name %}
+<a href="/{{topic}}/createthread">Luo ketju</a>
+{% endif %}
+<ul>
+{% for thread in threads %}
+<li><a href=/thread/{{thread.id}}>{{ thread.threadname }}</a>
+{% endfor %}
+</ul>

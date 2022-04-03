@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<title>Forum</title>
+<h1>{{info.threadname}}</h1>
+<ul>
+{% for message in messages %}
+<p><b>{{ message.username}}</b> sanoo: {{ message.content }}</p>
+<p>{{message.sent_at}}</p>
+{% endfor %}
+</ul>
+{% if session.user_name %}
+<a href=/thread/{{info.id}}/reply>Vastaa ketjuun</a>
+{% endif %}
