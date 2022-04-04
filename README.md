@@ -12,3 +12,12 @@ Sovelluksen ominaisuuksia:
 - Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle.
+
+#### Sovelluksen tilanne
+Toimivat ominaisuudet
+- Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
+- Käyttäjä näkee sovelluksen etusivulla listan alueista
+- Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
+- Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
+
+Sovellusta voi testata [Herokussa](https://forumharjoitustyo.herokuapp.com/)
