@@ -3,11 +3,8 @@
 <p>Tervetuloa {{ session.user_name }}!</p>
 <a href="/logout">Kirjaudu ulos</a>
 {% else %}
-<p>Et ole kirjautuneena sisään
-<form action="/login" method="POST">
-<p>Käyttäjätunnus: <input type="text" name="username"> Salasana: <input type="password" name="password"> <input type="submit" value="Kirjaudu">
-</form>
-<a href="/register">Rekisteröidy</a>
+<p> Et ole kirjautuneena sisään, kirjaudu sisään lähettääksesi viestejä tai <a href="/register">rekisteröidy</a>
+<form action="/login" method="POST"> Käyttäjätunnus: <input type="text" name="username"> Salasana: <input type="password" name="password"> <input type="submit" value="Kirjaudu"> </form>
 {% endif %}
 <title>Forum - etusivu</title>
 <h1>Forum</h1>
