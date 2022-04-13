@@ -12,7 +12,7 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
     if not users.login(username, password):
-        return render_template("error.html")
+        return render_template("error.html", errormessage="Käyttäjätunnus tai salasana on väärä!")
     return redirect("/")
 
 @app.route("/register")
