@@ -1,7 +1,7 @@
 from db import db
 
 def get_messages(thread_id):
-    sql = "SELECT users.username, messages.content, messages.sent_at FROM users, messages WHERE messages.sent_by = users.id AND messages.thread_id =:thread;"
+    sql = "SELECT users.username, messages.content, messages.sent_at FROM users, messages WHERE messages.sent_by = users.id AND messages.thread_id =:thread ORDER BY sent_at;"
     return db.session.execute(sql, {"thread":thread_id}).fetchall()
 
 def send_message(thread_id, content, user_id):
