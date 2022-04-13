@@ -1,8 +1,30 @@
 <!DOCTYPE html>
-<form action="/{{topic}}/create" method="POST">
+<form action="/{{topic}}/create" method="POST" onsubmit="return check(this)">
 Otsikko: <input type="text" name="title">
 <p></p>
 Viesti: <textarea name="message"></textarea>
 <p></p>
 <input type="submit" value="Lähetä">
 </form>
+
+<script>
+    function check(form) {
+        if (form.title.value.length > 50) {
+            alert("Otsikko on liian pitkä (max. 50 merkkiä)!");
+            return false;
+        }
+        if (form.title.value.length < 1) {
+            alert("Otsikko on liian lyhyt (min. 1 merkki)!");
+            return false;
+        }
+        if (form.message.value.length > 5000) {
+            alert("Viesti on liian pitkä (max. 5000 merkkiä)!");
+            return false;
+        }
+        if (form.password.value.length < 1) {
+            alert("Viesti on liian lyhyt (min. 1 merkki)!");
+            return false;
+        }
+        return true;
+    }
+</script>

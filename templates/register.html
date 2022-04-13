@@ -1,8 +1,30 @@
 <!DOCTYPE html>
-<form action="/registration" method="POST">
+<form action="/registration" method="POST" onsubmit="return check(this)">
 <p>Tunnus:<br>
 <input type="text" name="username"></p>
 <p>Salasana:<br>
 <input type="password" name="password"></p>
 <input type="submit" value="Rekisteröidy">
 </form>
+
+<script>
+function check(form) {
+    if (form.username.value.length > 20) {
+        alert("Käyttäjänimi on liian pitkä (max. 20 merkkiä)!");
+        return false;
+    }
+    if (form.username.value.length < 3) {
+        alert("Käyttäjänimi on liian lyhyt (min. 3 merkkiä)!");
+        return false;
+    }
+    if (form.password.value.length > 100) {
+        alert("Salasana on liian pitkä (max. 100 merkkiä)!");
+        return false;
+    }
+    if (form.password.value.length < 3) {
+        alert("Salasana on liian lyhyt (min. 3 merkkiä)!");
+        return false;
+    }
+    return true;
+}
+</script>
