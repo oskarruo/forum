@@ -3,7 +3,7 @@ from flask import session, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 
 def login(username, password):
-    sql = "SELECT id, password FROM users WHERE username=:username;"
+    sql = "SELECT id, password, role FROM users WHERE username=:username;"
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone() 
     if not user:
@@ -13,16 +13,16 @@ def login(username, password):
         if check_password_hash(hash_value, password):
             session["user_id"] = user.id
             session["user_name"] = username
-            session["user_logged"] = 1
+            session["user_role"] = user.role
             return True
         else:
             return False
 
-def register(username, password):
+def register(username, password, role):
     hash_value = generate_password_hash(password)
     try:
-        sql = "INSERT INTO users(username, password) VALUES(:username, :password);"
-        db.session.execute(sql, {"username":username, "password":hash_value})
+        sql = "INSERT INTO users(username, password, role) VALUES(:username, :password, :role);"
+        db.session.execute(sql, {"username":username, "password":hash_value, "role":role})
         db.session.commit()
     except:
         return False
@@ -33,11 +33,8 @@ def logout():
     del session["user_name"]
     del session["user_logged"]
 
-def islogged():
-    try:
-        session["user_name"]
-        return True
-    except:
+def check_role(role):
+    if role > session.get("user_role", 0):
         return abort(403)
 
 def username_exists(username):
@@ -47,3 +44,9 @@ def username_exists(username):
         return False
     else:
         return True
+
+def allow_edit(message_id):
+    sql = "SELECT sent_by FROM messages WHERE id=:message_id"
+    result = db.session.execute(sql, {"message_id":message_id}).fetchone()
+    if result.sent_by != session.get("user_id"):
+        return abort(403)
