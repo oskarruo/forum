@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<form action="/edit/{{content.id}}/send" method="POST" onsubmit="return check(this)">
+Muokkaa viestiä: <br>
+<textarea name="content">{{content.content}}</textarea>
+<br>
+<input type="submit" value="Lähetä">
+</form>
+
+<script>
+    function check(form) {
+        if (form.content.value.length > 5000) {
+            alert("Viesti on liian pitkä (max. 5000 merkkiä)!");
+            return false;
+        }
+        if (form.content.value.length < 1) {
+            alert("Viesti on liian lyhyt (min. 1 merkki)!");
+            return false;
+        }
+        return true;
+    }
+</script>
