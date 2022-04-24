@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request, session, abort
 import topics, threads, messages, users
 
 @app.route("/")
@@ -38,19 +38,39 @@ def logout():
     users.logout()
     return redirect("/")
 
+@app.route("/create_topic", methods=["POST", "GET"])
+def create_topic():
+    users.role_required(2)
+    return render_template("create_topic.html")
+
+@app.route("/topic_created", methods=["POST"])
+def topic_created():
+    users.role_required(2)
+    topic = request.form["title"]
+    topics.create_topic(topic)
+    return redirect("/")
+
 @app.route("/<topic>")
 def topic(topic):
+    if topics.topic_visible(topic).visible < 1:
+        abort(404)
     allthreads = threads.get_threads(topic)
     return render_template("threads.html", threads=allthreads, topic=topic)
 
+@app.route("/<topic>/delete")
+def topic_delete(topic):
+    users.role_required(2)
+    topics.delete_topic(topic)
+    return redirect("/")
+
 @app.route("/<topic>/createthread")
 def createthread(topic):
-    users.check_role(1)
+    users.role_required(1)
     return render_template("create_thread.html", topic=topic)
 
 @app.route("/<topic>/create", methods=["POST"])
 def create(topic):
-    users.check_role(1)
+    users.role_required(1)
     user = session["user_id"]
     threadname = request.form["title"]
     if len(threadname) < 1 or len(threadname) > 50:
@@ -65,19 +85,21 @@ def create(topic):
 
 @app.route("/thread/<thread_id>")
 def thread(thread_id):
+    if threads.thread_visible(thread_id).visible < 1:
+        abort(404)
     allmessages = messages.get_messages(thread_id)
     threadinfo = threads.get_threadinfo(thread_id)
     return render_template("thread.html", messages=allmessages, info=threadinfo)
 
 @app.route("/thread/<thread_id>/reply")
 def reply(thread_id):
-    users.check_role(1)
+    users.role_required(1)
     threadinfo = threads.get_threadinfo(thread_id)
     return render_template("reply.html", info=threadinfo)
 
 @app.route("/thread/<thread_id>/send", methods=["POST"])
 def send(thread_id):
-    users.check_role(1)
+    users.role_required(1)
     content = request.form["content"]
     if len(content) < 1 or len(content) > 5000:
         return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
@@ -102,6 +124,33 @@ def send_edit(message_id):
 
 @app.route("/delete/<message_id>")
 def delete_message(message_id):
-    users.allow_edit(message_id)
+    if users.role() > 1:
+        pass
+    else:
+        users.allow_edit(message_id)
     messages.delete_message(message_id)
+    return redirect("/")
+
+@app.route("/thread/<thread_id>/edit_title")
+def edit_title(thread_id):
+    users.allow_thread_edit(thread_id)
+    info = threads.get_threadinfo(thread_id)
+    return render_template("edit_title.html", info = info)
+
+@app.route("/thread/<thread_id>/send_edit", methods=["POST"])
+def send_title_edit(thread_id):
+    users.allow_thread_edit(thread_id)
+    title = request.form["title"]
+    if len(title) < 1 or len(title) > 50:
+        return render_template("error.html", errormessage="Otsikon tulee olla vähintään 1 merkin ja enintään 50 merkin pituinen")
+    threads.edit_title(thread_id, title)
+    return redirect("/")
+
+@app.route("/thread/<thread_id>/delete")
+def delete_thread(thread_id):
+    if users.role() > 1:
+        pass
+    else:
+        users.allow_thread_edit(thread_id)
+    threads.delete_thread(thread_id)
     return redirect("/")
