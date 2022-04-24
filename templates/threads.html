@@ -1,11 +1,29 @@
 <!DOCTYPE html>
+<style>
+table, th, td {
+border:1px solid black;
+}
+</style>
 <title>Forum</title>
 <h1>Ketjut</h1>
 {% if session.user_name %}
 <a href="/{{topic}}/createthread">Luo ketju</a>
 {% endif %}
-<ul>
+<table style="width:25%">
+<thead>
+<tr>
+<th>Otsikko</th>
+<th>Viestien määrä</th>
+<th>Viimeisin viesti</th>
+</tr>
+</thead>
+<tbody>
 {% for thread in threads %}
-<li><a href=/thread/{{thread.id}}>{{ thread.threadname }}</a>
+<tr>
+<td><a href=/thread/{{thread.id}}>{{ thread.threadname }}</a></td>
+<td>{{thread.count}}</td>
+<td>{{thread.max}}</td>
+</tr>
 {% endfor %}
-</ul>
+</tbody>
+</table>
