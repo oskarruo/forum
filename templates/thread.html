@@ -4,7 +4,19 @@
 <ul>
 {% for message in messages %}
 <p><b>{{ message.username}}</b> sanoo: {{ message.content }}</p>
-<p>{{message.sent_at}}</p>
+<p>{{message.sent_at}}</p> 
+{% if message.modified > 0 %} 
+<p><i>Viestiä on muokattu</i></p>
+{% endif %}
+{% if session.user_id == message.sent_by %}
+<form action="/edit/{{message.id}}">
+<input type="submit" value="Muokkaa viestiä"/>
+</form>
+<form action="/delete/{{message.id}}">
+<input type="submit" value="Poista viesti"/>
+</form>
+{% endif %}
+<hr>
 {% endfor %}
 </ul>
 {% if session.user_name %}
