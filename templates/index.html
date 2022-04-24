@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<style>
+table, th, td {
+border:1px solid black;
+}
+</style>
 {% if session.user_name %}
 <p>Tervetuloa {{ session.user_name }}!</p>
 <a href="/logout">Kirjaudu ulos</a>
@@ -11,8 +16,21 @@
 <p></p>
 <h3>Aihealueet</h3>
 <p></p>
-<ul>
+<table style="width:25%">
+<thead>
+<tr>
+	<th>Aihe</th>
+	<th>Ketjut</th>
+    <th>Viimeisin luotu</th>
+</tr>
+</thead>
+<tbody>
 {% for topic in topics %}
-<li><a href={{topic.topic}}>{{ topic.topic }}</a>
+<tr>
+	<td><a href={{topic.topic}}>{{ topic.topic }}</a></td>
+	<td>{{topic.count}}</td>
+	<td>{{topic.max}}</td>
+</tr>
 {% endfor %}
-</ul>
+</tbody>
+</table>
