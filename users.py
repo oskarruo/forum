@@ -1,5 +1,5 @@
 from db import db
-from flask import session, abort
+from flask import render_template, session, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 
 def login(username, password):
@@ -31,11 +31,18 @@ def register(username, password, role):
 def logout():
     del session["user_id"]
     del session["user_name"]
-    del session["user_logged"]
+    del session["user_role"]
 
-def check_role(role):
+def role_required(role):
     if role > session.get("user_role", 0):
         return abort(403)
+    return True
+
+def role():
+    try:
+        return session.get("user_role")
+    except:
+        return False
 
 def username_exists(username):
     sql = "SELECT username FROM users WHERE username=:username;"
@@ -49,4 +56,10 @@ def allow_edit(message_id):
     sql = "SELECT sent_by FROM messages WHERE id=:message_id"
     result = db.session.execute(sql, {"message_id":message_id}).fetchone()
     if result.sent_by != session.get("user_id"):
+        return abort(403)
+
+def allow_thread_edit(thread_id):
+    sql = "SELECT created_by FROM threads WHERE id=:thread_id"
+    result = db.session.execute(sql, {"thread_id":thread_id}).fetchone()
+    if result.created_by != session.get("user_id"):
         return abort(403)
