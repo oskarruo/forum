@@ -23,13 +23,14 @@ def register():
 def registration():
     username = request.form["username"]
     password = request.form["password"]
+    role = request.form["role"]
     if len(username) < 3 or len(username) > 20:
         return render_template("error.html", errormessage="Tunnuksen tulee olla vähintään 3 merkkiä ja enintään 20 merkkiä pitkä")
     if len(password) < 3 or len(password) > 100:
         return render_template("error.html", errormessage="Salasanan tulee olla vähintään 3 merkkiä ja enintään 100 merkkiä pitkä")
     if users.username_exists(username):
         return render_template("error.html", errormessage="Käyttäjätunnus on jo käytössä")
-    users.register(username, password)
+    users.register(username, password, role)
     return redirect("/")
 
 @app.route("/logout")
@@ -44,12 +45,12 @@ def topic(topic):
 
 @app.route("/<topic>/createthread")
 def createthread(topic):
-    users.islogged()
+    users.check_role(1)
     return render_template("create_thread.html", topic=topic)
 
 @app.route("/<topic>/create", methods=["POST"])
 def create(topic):
-    users.islogged()
+    users.check_role(1)
     user = session["user_id"]
     threadname = request.form["title"]
     if len(threadname) < 1 or len(threadname) > 50:
@@ -70,16 +71,37 @@ def thread(thread_id):
 
 @app.route("/thread/<thread_id>/reply")
 def reply(thread_id):
-    users.islogged()
+    users.check_role(1)
     threadinfo = threads.get_threadinfo(thread_id)
     return render_template("reply.html", info=threadinfo)
 
 @app.route("/thread/<thread_id>/send", methods=["POST"])
 def send(thread_id):
-    users.islogged()
+    users.check_role(1)
     content = request.form["content"]
     if len(content) < 1 or len(content) > 5000:
         return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
     user = session["user_id"]
     messages.send_message(thread_id, content, user)
+    return redirect("/")
+
+@app.route("/edit/<message_id>")
+def edit(message_id):
+    users.allow_edit(message_id)
+    content = messages.get_content(message_id)
+    return render_template("edit.html", content=content)
+
+@app.route("/edit/<message_id>/send", methods=["POST"])
+def send_edit(message_id):
+    users.allow_edit(message_id)
+    content = request.form["content"]
+    if len(content) < 1 or len(content) > 5000:
+        return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
+    messages.edit_message(message_id, content)
+    return redirect("/")
+
+@app.route("/delete/<message_id>")
+def delete_message(message_id):
+    users.allow_edit(message_id)
+    messages.delete_message(message_id)
     return redirect("/")
