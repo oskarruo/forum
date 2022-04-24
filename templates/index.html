@@ -1,17 +1,17 @@
 <!DOCTYPE html>
+<title>Forum</title>
 <style>
 table, th, td {
 border:1px solid black;
 }
 </style>
 {% if session.user_name %}
-<p>Tervetuloa {{ session.user_name }}!</p>
+<p>Tervetuloa {% if session.user_role > 1 %}<b>ylläpitäjä </b>{% endif %}{{ session.user_name }}!
 <a href="/logout">Kirjaudu ulos</a>
 {% else %}
 <p> Et ole kirjautuneena sisään, kirjaudu sisään lähettääksesi viestejä tai <a href="/register">rekisteröidy</a>
 <form action="/login" method="POST"> Käyttäjätunnus: <input type="text" name="username"> Salasana: <input type="password" name="password"> <input type="submit" value="Kirjaudu"> </form>
 {% endif %}
-<title>Forum - etusivu</title>
 <h1>Forum</h1>
 <p></p>
 <h3>Aihealueet</h3>
@@ -30,7 +30,14 @@ border:1px solid black;
 	<td><a href={{topic.topic}}>{{ topic.topic }}</a></td>
 	<td>{{topic.count}}</td>
 	<td>{{topic.max}}</td>
+    {% if session.user_name and session.user_role > 1 %}
+    <td><form action="/{{topic.topic}}/delete"><input type="submit" value="Poista aihealue"/></form></td>
+    {% endif %}
 </tr>
+
 {% endfor %}
 </tbody>
 </table>
+{% if session.user_name and session.user_role > 1 %}
+<a href="/create_topic">Luo aihealue</a>
+{% endif %}

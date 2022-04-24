@@ -1,6 +1,22 @@
 <!DOCTYPE html>
-<title>Forum</title>
-<h1>{{info.threadname}}</h1>
+<title>Ketju - Forum</title>
+<h1>{{info.threadname}}</h1> 
+{% if info.name_modified > 0 %}
+<i>Otsikkoa on muokattu</i> 
+{% endif %}
+{% if session.user_name and session.user_id == info.created_by %}
+<p>
+<form action="/thread/{{info.id}}/edit_title">
+<input type="submit" value="Muokkaa otsikkoa"/>
+</form>
+<form action="/thread/{{info.id}}/delete">
+<input type="submit" value="Poista ketju"/>
+</form>
+{% elif session.user_name and session.user_role > 1%}
+<form action="/thread/{{info.id}}/delete">
+<input type="submit" value="Poista ketju"/>
+</form>
+{% endif %}
 <ul>
 {% for message in messages %}
 <p><b>{{ message.username}}</b> sanoo: {{ message.content }}</p>
@@ -12,6 +28,12 @@
 <form action="/edit/{{message.id}}">
 <input type="submit" value="Muokkaa viestiä"/>
 </form>
+{% endif %}
+{% if session.user_name and session.user_id == message.sent_by %}
+<form action="/delete/{{message.id}}">
+<input type="submit" value="Poista viesti"/>
+</form>
+{% elif session.user_name and session.user_role > 1%}
 <form action="/delete/{{message.id}}">
 <input type="submit" value="Poista viesti"/>
 </form>

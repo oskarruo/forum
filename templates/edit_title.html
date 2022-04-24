@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>Muokataan otsikkoa - Forum</title>
+<form action="/thread/{{info.id}}/send_edit" method="POST" onsubmit="return check(this)">
+Muokkaa otsikkoa: <br>
+<textarea name="title">{{info.threadname}}</textarea>
+<br>
+<input type="submit" value="Lähetä">
+</form>
+
+<script>
+    function check(form) {
+        if (form.content.value.length > 5000) {
+            alert("Otsikko on liian pitkä (max. 50 merkkiä)!");
+            return false;
+        }
+        if (form.content.value.length < 1) {
+            alert("Otsikko on liian lyhyt (min. 1 merkki)!");
+            return false;
+        }
+        return true;
+    }
+</script>
