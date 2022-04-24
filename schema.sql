@@ -5,7 +5,7 @@ CREATE TABLE users (
     role INTEGER
 );
 
-CREATE TABLE topic (
+CREATE TABLE topics (
     id SERIAL PRIMARY KEY,
     topic TEXT UNIQUE,
     visible INTEGER
