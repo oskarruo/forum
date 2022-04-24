@@ -1,7 +1,7 @@
 from db import db
 
 def get_threads(topic):
-    sql = "SELECT threads.id, threads.threadname FROM threads, topics WHERE topics.topic=:topic AND topics.id = threads.topic_id;"
+    sql = "SELECT threads.id, threads.threadname, count(messages), max(sent_at) FROM threads, topics, messages WHERE topics.topic=:topic AND topics.id = threads.topic_id AND messages.thread_id = threads.id AND messages.visible > 0 GROUP BY threads.id;"
     return db.session.execute(sql, {"topic":topic}).fetchall()
     
 def get_threadinfo(thread_id):
