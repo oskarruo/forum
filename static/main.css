@@ -1,0 +1,13 @@
+body {
+    margin: auto;
+    max-width: 60em;
+    font-family: 'Calibri', 'Calibri', sans-serif;
+    background-color: rgb(241, 216, 168);
+}
+table{
+    border:1px solid black;
+    width: 100%;    
+}
+th, td {
+    border:1px solid black;
+}
