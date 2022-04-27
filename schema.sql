@@ -15,7 +15,7 @@ CREATE TABLE threads (
     id SERIAL PRIMARY KEY,
     threadname TEXT,
     topic_id INTEGER,
-    created_at TIMESTAMP,
+    created_at TEXT,
     created_by INTEGER,
     name_modified INTEGER,
     visible INTEGER
@@ -24,7 +24,7 @@ CREATE TABLE threads (
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     thread_id INTEGER,
-    sent_at TIMESTAMP,
+    sent_at TEXT,
     content TEXT,
     sent_by INTEGER,
     modified INTEGER,
