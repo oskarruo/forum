@@ -20,3 +20,7 @@ def delete_topic(topic):
     sql = "UPDATE topics SET visible = 0 WHERE topic=:topic;"
     db.session.execute(sql, {"topic":topic})
     db.session.commit()
+
+def get_topic_name(thread_id):
+    sql = "SELECT topic FROM topics, threads WHERE threads.topic_id = topics.id AND threads.id=:thread_id;"
+    return db.session.execute(sql, {"thread_id":thread_id}).fetchone()
