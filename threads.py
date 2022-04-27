@@ -9,7 +9,7 @@ def get_threadinfo(thread_id):
     return db.session.execute(sql, {"thread_id":thread_id}).fetchone()
 
 def create_thread(topic_id, user, threadname):
-    sql = "INSERT INTO threads(topic_id, created_by, threadname, created_at, name_modified, visible) VALUES (:topic_id, :created_by, :threadname, NOW(), 0, 1);"
+    sql = "INSERT INTO threads(topic_id, created_by, threadname, created_at, name_modified, visible) VALUES (:topic_id, :created_by, :threadname, TO_CHAR(NOW() :: TIMESTAMP, 'dd.mm.yyyy klo hh24.mi.ss'), 0, 1);"
     db.session.execute(sql, {"topic_id":topic_id, "created_by":user, "threadname":threadname})
     db.session.commit()
     sql2 = "SELECT id FROM threads WHERE topic_id=:topic_id AND created_by=:created_by AND threadname=:threadname ORDER BY created_at DESC;"
