@@ -15,23 +15,23 @@ def login():
         return render_template("error.html", errormessage="Käyttäjätunnus tai salasana on väärä!")
     return redirect("/")
 
-@app.route("/register")
+@app.route("/register", methods=["POST", "GET"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
 
-@app.route("/registration", methods=["POST"])
-def registration():
-    username = request.form["username"]
-    password = request.form["password"]
-    role = request.form["role"]
-    if len(username) < 3 or len(username) > 20:
-        return render_template("error.html", errormessage="Tunnuksen tulee olla vähintään 3 merkkiä ja enintään 20 merkkiä pitkä")
-    if len(password) < 3 or len(password) > 100:
-        return render_template("error.html", errormessage="Salasanan tulee olla vähintään 3 merkkiä ja enintään 100 merkkiä pitkä")
-    if users.username_exists(username):
-        return render_template("error.html", errormessage="Käyttäjätunnus on jo käytössä")
-    users.register(username, password, role)
-    return redirect("/")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        role = request.form["role"]
+        if len(username) < 3 or len(username) > 20:
+            return render_template("error.html", errormessage="Tunnuksen tulee olla vähintään 3 merkkiä ja enintään 20 merkkiä pitkä")
+        if len(password) < 3 or len(password) > 100:
+            return render_template("error.html", errormessage="Salasanan tulee olla vähintään 3 merkkiä ja enintään 100 merkkiä pitkä")
+        if users.username_exists(username):
+            return render_template("error.html", errormessage="Käyttäjätunnus on jo käytössä")
+        users.register(username, password, role)
+        return redirect("/")
 
 @app.route("/logout")
 def logout():
