@@ -41,14 +41,14 @@ def logout():
 @app.route("/create_topic", methods=["POST", "GET"])
 def create_topic():
     users.role_required(2)
-    return render_template("create_topic.html")
 
-@app.route("/topic_created", methods=["POST"])
-def topic_created():
-    users.role_required(2)
-    topic = request.form["title"]
-    topics.create_topic(topic)
-    return redirect("/")
+    if request.method == "GET":
+        return render_template("create_topic.html")
+    
+    if request.method == "POST":
+        topic = request.form["title"]
+        topics.create_topic(topic)
+        return redirect("/"+str(topic))
 
 @app.route("/<topic>")
 def topic(topic):
@@ -63,25 +63,25 @@ def topic_delete(topic):
     topics.delete_topic(topic)
     return redirect("/")
 
-@app.route("/<topic>/createthread")
+@app.route("/<topic>/create_thread", methods=["POST", "GET"])
 def createthread(topic):
     users.role_required(1)
-    return render_template("create_thread.html", topic=topic)
 
-@app.route("/<topic>/create", methods=["POST"])
-def create(topic):
-    users.role_required(1)
-    user = session["user_id"]
-    threadname = request.form["title"]
-    if len(threadname) < 1 or len(threadname) > 50:
-        return render_template("error.html", errormessage="Otsikon tulee olla vähintään 1 merkin ja enintään 50 merkin pituinen") 
-    message = request.form["message"]
-    if len(message) < 1 or len(message) > 5000:
-        return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
-    topic_id = topics.get_topicid(topic)
-    thread_id = threads.create_thread(topic_id.id, user, threadname)
-    messages.send_message(thread_id.id, message, user)
-    return redirect("/")
+    if request.method == "GET":
+        return render_template("create_thread.html", topic=topic)
+
+    if request.method == "POST":
+        user = session["user_id"]
+        threadname = request.form["title"]
+        if len(threadname) < 1 or len(threadname) > 50:
+            return render_template("error.html", errormessage="Otsikon tulee olla vähintään 1 merkin ja enintään 50 merkin pituinen") 
+        message = request.form["message"]
+        if len(message) < 1 or len(message) > 5000:
+            return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
+        topic_id = topics.get_topicid(topic)
+        thread_id = threads.create_thread(topic_id.id, user, threadname)
+        messages.send_message(thread_id.id, message, user)
+        return redirect("/thread/"+str(thread_id.id))
 
 @app.route("/thread/<thread_id>")
 def thread(thread_id):
@@ -89,38 +89,41 @@ def thread(thread_id):
         abort(404)
     allmessages = messages.get_messages(thread_id)
     threadinfo = threads.get_threadinfo(thread_id)
-    return render_template("thread.html", messages=allmessages, info=threadinfo)
+    topicname = topics.get_topic_name(thread_id)
+    return render_template("thread.html", messages=allmessages, info=threadinfo, topicname=topicname)
 
-@app.route("/thread/<thread_id>/reply")
+@app.route("/thread/<thread_id>/reply", methods=["POST", "GET"])
 def reply(thread_id):
     users.role_required(1)
-    threadinfo = threads.get_threadinfo(thread_id)
-    return render_template("reply.html", info=threadinfo)
+    
+    if request.method == "GET":
+        threadinfo = threads.get_threadinfo(thread_id)
+        return render_template("reply.html", info=threadinfo)
 
-@app.route("/thread/<thread_id>/send", methods=["POST"])
-def send(thread_id):
-    users.role_required(1)
-    content = request.form["content"]
-    if len(content) < 1 or len(content) > 5000:
-        return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
-    user = session["user_id"]
-    messages.send_message(thread_id, content, user)
-    return redirect("/")
+    if request.method == "POST":
+        content = request.form["content"]
+        if len(content) < 1 or len(content) > 5000:
+            return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
+        user = session["user_id"]
+        messages.send_message(thread_id, content, user)
+        return redirect("/thread/"+str(thread_id))
 
-@app.route("/edit/<message_id>")
+@app.route("/edit/<message_id>", methods=["POST", "GET"])
 def edit(message_id):
     users.allow_edit(message_id)
-    content = messages.get_content(message_id)
-    return render_template("edit.html", content=content)
+    
+    if request.method == "GET":
+        content = messages.get_content(message_id)
+        thread_id = messages.get_thread_id(message_id)
+        return render_template("edit.html", content=content, thread_id=thread_id)
 
-@app.route("/edit/<message_id>/send", methods=["POST"])
-def send_edit(message_id):
-    users.allow_edit(message_id)
-    content = request.form["content"]
-    if len(content) < 1 or len(content) > 5000:
-        return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
-    messages.edit_message(message_id, content)
-    return redirect("/")
+    if request.method == "POST":
+        content = request.form["content"]
+        if len(content) < 1 or len(content) > 5000:
+            return render_template("error.html", errormessage="Viestin tulee olla vähintään 1 merkin ja enintään 5000 merkin pituinen")
+        messages.edit_message(message_id, content)
+        thread_id = messages.get_thread_id(message_id)
+        return redirect("/thread/"+str(thread_id.thread_id))
 
 @app.route("/delete/<message_id>")
 def delete_message(message_id):
@@ -128,23 +131,24 @@ def delete_message(message_id):
         pass
     else:
         users.allow_edit(message_id)
+    thread_id = messages.get_thread_id(message_id)
     messages.delete_message(message_id)
-    return redirect("/")
+    return redirect("/thread/"+str(thread_id.thread_id))
 
-@app.route("/thread/<thread_id>/edit_title")
+@app.route("/thread/<thread_id>/edit_title", methods=["POST", "GET"])
 def edit_title(thread_id):
     users.allow_thread_edit(thread_id)
-    info = threads.get_threadinfo(thread_id)
-    return render_template("edit_title.html", info = info)
+    
+    if request.method == "GET":
+        info = threads.get_threadinfo(thread_id)
+        return render_template("edit_title.html", info = info)
 
-@app.route("/thread/<thread_id>/send_edit", methods=["POST"])
-def send_title_edit(thread_id):
-    users.allow_thread_edit(thread_id)
-    title = request.form["title"]
-    if len(title) < 1 or len(title) > 50:
-        return render_template("error.html", errormessage="Otsikon tulee olla vähintään 1 merkin ja enintään 50 merkin pituinen")
-    threads.edit_title(thread_id, title)
-    return redirect("/")
+    if request.method == "POST":
+        title = request.form["title"]
+        if len(title) < 1 or len(title) > 50:
+            return render_template("error.html", errormessage="Otsikon tulee olla vähintään 1 merkin ja enintään 50 merkin pituinen")
+        threads.edit_title(thread_id, title)
+        return redirect("/thread/"+str(thread_id))
 
 @app.route("/thread/<thread_id>/delete")
 def delete_thread(thread_id):
@@ -152,5 +156,6 @@ def delete_thread(thread_id):
         pass
     else:
         users.allow_thread_edit(thread_id)
+    topic = topics.get_topic_name(thread_id)
     threads.delete_thread(thread_id)
-    return redirect("/")
+    return redirect("/"+str(topic.topic))
