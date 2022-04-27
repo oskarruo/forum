@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="/static/main.css">
 <title>Muokataan viestiä - Forum</title>
-<form action="/edit/{{content.id}}/send" method="POST" onsubmit="return check(this)">
+<a href="/thread/{{thread_id.thread_id}}">Palaa ketjuun</a>
+<form action="/edit/{{content.id}}" method="POST" onsubmit="return check(this)">
 Muokkaa viestiä: <br>
 <textarea name="content">{{content.content}}</textarea>
 <br>

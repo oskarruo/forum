@@ -1,16 +1,12 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="/static/main.css">
 <title>Ketjut - Forum</title>
-<style>
-table, th, td {
-border:1px solid black;
-}
-</style>
-<title>Forum</title>
+<a href="/">Palaa etusivulle</a>
 <h1>Ketjut</h1>
 {% if session.user_name %}
-<a href="/{{topic}}/createthread">Luo ketju</a>
+<a href="/{{topic}}/create_thread">Luo ketju</a>
 {% endif %}
-<table style="width:25%">
+<table>
 <thead>
 <tr>
 <th>Otsikko</th>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="/static/main.css">
 <title>Luodaan ketjua - Forum</title>
-<form action="/{{topic}}/create" method="POST" onsubmit="return check(this)">
+<a href="/{{topic}}">Palaa ketjulistaan</a>
+<form action="/{{topic}}/create_thread" method="POST" onsubmit="return check(this)">
 Otsikko: <input type="text" name="title">
 <p></p>
 Viesti: <textarea name="message"></textarea>

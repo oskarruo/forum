@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="/static/main.css">
 <title>Vastataan ketjuun - Forum</title>
-<form action="/thread/{{info.id}}/send" method="POST" onsubmit="return check(this)">
+<a href="/thread/{{info.id}}">Palaa ketjuun</a>
+<form action="/thread/{{info.id}}/reply" method="POST" onsubmit="return check(this)">
 Viesti: <br>
 <textarea name="content"></textarea>
 <br>
