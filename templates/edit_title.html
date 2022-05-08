@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Muokataan otsikkoa - Forum</title>
+
 <a href="/thread/{{info.id}}">Palaa ketjuun</a>
+
 <form action="/thread/{{info.id}}/edit_title" method="POST" onsubmit="return check(this)">
-Muokkaa otsikkoa: <br>
-<textarea name="title">{{info.threadname}}</textarea>
-<br>
-<input type="submit" value="Lähetä">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    Muokkaa otsikkoa: <br>
+    <textarea name="title" class="title_field">{{info.threadname}}</textarea>
+    <input type="submit" value="Lähetä">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <script>
     function check(form) {
+        passed = true
         if (form.content.value.length > 5000) {
             alert("Otsikko on liian pitkä (max. 50 merkkiä)!");
-            return false;
+            passed = false;
         }
         if (form.content.value.length < 1) {
             alert("Otsikko on liian lyhyt (min. 1 merkki)!");
-            return false;
+            passed = false;
         }
-        return true;
+        return passed;
     }
 </script>

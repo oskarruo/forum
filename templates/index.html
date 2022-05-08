@@ -1,41 +1,30 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Forum</title>
 
 {% if session.user_name %}
-<p>Tervetuloa {% if session.user_role > 1 %}<b>ylläpitäjä </b>{% endif %}{{ session.user_name }}!
-<a href="/logout">Kirjaudu ulos</a>
+<p class="logout">Tervetuloa {% if session.user_role > 1 %}<b>ylläpitäjä </b>{% endif %}{{ session.user_name }}! <a href="/logout">Kirjaudu ulos</a> </p>
 {% else %}
-<p> Et ole kirjautuneena sisään, kirjaudu sisään lähettääksesi viestejä tai <a href="/register">rekisteröidy</a>
-<form action="/login" method="POST"> Käyttäjätunnus: <input type="text" name="username"> Salasana: <input type="password" name="password"> <input type="submit" value="Kirjaudu"> </form>
+<form action="/login" method="POST" class="login_form"> Käyttäjätunnus: <input type="text" name="username"> Salasana: <input type="password" name="password"> <input type="submit" value="Kirjaudu"> <a href="/register"> Rekisteröidy</a> </form> 
 {% endif %}
+
 <h1>Forum</h1>
-<p></p>
 <h3>Aihealueet</h3>
-<p></p>
-<table>
-<thead>
-<tr>
-	<th>Aihe</th>
-	<th>Ketjut</th>
-    <th>Viimeisin luotu</th>
-</tr>
-</thead>
-<tbody>
-{% for topic in topics %}
-<tr>
-	<td><a href={{topic.id}}>{{ topic.topic }}</a></td>
-	<td>{{topic.count}}</td>
-	<td>{{topic.max}}</td>
-    {% if session.user_name and session.user_role > 1 %}
-    <td><form action="/{{topic.id}}/delete"><input type="submit" value="Poista aihealue"/></form></td>
-    {% endif %}
-</tr>
-{% endfor %}
-</tbody>
-</table>
+	{% for topic in topics %}
+	<div class="row">
+		<p>Aihe: <a href={{topic.id}} class="t_title">{{ topic.topic }}</a></p>
+		<div class="t_info">
+		<p>Ketjujen määrä: {{topic.count}}</p>
+		{% if topic.max != None %}
+		<p>Viimeisin luotu: {{topic.max}}</p>
+		{% endif %}
+		</div>
+		{% if session.user_name and session.user_role > 1 %}
+		<form action="/{{topic.id}}/delete"><input type="submit" value="Poista aihealue"/></form>
+		{% endif %}
+	</div>
+	{% endfor %}
 {% if session.user_name and session.user_role > 1 %}
 <a href="/create_topic">Luo aihealue</a>
 {% endif %}
-<a href=/search>Hae</a>

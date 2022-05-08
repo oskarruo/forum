@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Ketjut - Forum</title>
+
 <a href="/">Palaa etusivulle</a>
 <h1>Ketjut</h1>
+
 {% if session.user_name %}
 <a href="/{{topic}}/create_thread">Luo ketju</a>
 {% endif %}
-<table>
-<thead>
-<tr>
-<th>Otsikko</th>
-<th>Viestien määrä</th>
-<th>Viimeisin viesti</th>
-</tr>
-</thead>
-<tbody>
+
 {% for thread in threads %}
-<tr>
-<td><a href=/thread/{{thread.id}}>{{ thread.threadname }}</a></td>
-<td>{{thread.count}}</td>
-<td>{{thread.max}}</td>
-</tr>
+<div class="row">
+    <p>Otsikko: <a href=/thread/{{thread.id}} class="t_title">{{ thread.threadname }}</a></p>
+    <div class="t_info">
+        <p>Viestien määrä: {{thread.sum}}</p>
+        {% if thread.sum != 0 %}
+        <p>Viimeisin lähetetty: {{thread.max}}</p>
+        {% endif %}
+    </div>
+</div>
 {% endfor %}
-</tbody>
-</table>

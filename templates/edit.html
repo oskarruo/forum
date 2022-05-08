@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Muokataan viestiä - Forum</title>
+
 <a href="/thread/{{thread_id.thread_id}}">Palaa ketjuun</a>
+
 <form action="/edit/{{content.id}}" method="POST" onsubmit="return check(this)">
-Muokkaa viestiä: <br>
-<textarea name="content">{{content.content}}</textarea>
-<br>
-<input type="submit" value="Lähetä">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    Muokkaa viestiä: <br>
+    <textarea name="content">{{content.content}}</textarea>
+    <br>
+    <input type="submit" value="Lähetä">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <script>
     function check(form) {
         if (form.content.value.length > 5000) {
+            passed = true
             alert("Viesti on liian pitkä (max. 5000 merkkiä)!");
-            return false;
+            passed = false;
         }
         if (form.content.value.length < 1) {
             alert("Viesti on liian lyhyt (min. 1 merkki)!");
-            return false;
+            passed = false;
         }
-        return true;
+        return passed;
     }
 </script>

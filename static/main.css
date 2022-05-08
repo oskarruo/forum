@@ -2,12 +2,61 @@ body {
     margin: auto;
     max-width: 60em;
     font-family: 'Calibri', 'Calibri', sans-serif;
+    background-color: rgb(194, 232, 255);
+}
+.row {
+    padding: 1em;
+    border-radius: .5em;
     background-color: rgb(177, 223, 250);
+    margin: 1em;
 }
-table{
-    border:1px solid black;
-    width: 100%;    
+.messagerow {
+    padding: 1em;
+    border-radius: .5em;
+    background-color: rgb(177, 223, 250);
+    margin: 1em;
+    padding-bottom: 3em;
 }
-th, td {
-    border:1px solid black;
+p, .m_button {
+    display: inline-block;
+}
+.login_form, .logout {
+    padding: 1em;
+    position: absolute;
+    right: 0px;
+}
+h1 {
+    margin: auto;
+    padding: 1em;
+    text-align: center;
+}
+h3 {
+    padding: 0.5em;
+}
+.t_title {
+    font-size: 110%;
+    font-weight: bold;
+}
+.t_info {
+    float: right;
+    display: block;
+    padding: 1em;
+}
+.m_buttons {
+    display: block;
+    float: right;
+}
+.content {
+    white-space: inherit;
+    word-break: break-word;
+}
+textarea {
+    height: 30em;
+    width: 100%;
+    max-width: 100%;
+}
+.title_field {
+    height: 1em;
+    width: 100%;
+    max-width: 100%;
 }

@@ -1,54 +1,69 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Ketju - Forum</title>
+
 <a href="/{{topic_id.id}}">Palaa ketjulistaan</a>
 <h1>{{info.threadname}}</h1> 
+
 {% if info.name_modified > 0 %}
 <i>Otsikkoa on muokattu</i> 
 {% endif %}
+
 {% if session.user_name and session.user_id == info.created_by %}
-<p>
-<form action="/thread/{{info.id}}/edit_title">
-<input type="submit" value="Muokkaa otsikkoa"/>
+<form action="/thread/{{info.id}}/edit_title" class="m_button">
+    <input type="submit" value="Muokkaa otsikkoa"/>
 </form>
-<form action="/thread/{{info.id}}/delete">
-<input type="submit" value="Poista ketju"/>
+
+<form action="/thread/{{info.id}}/delete" class="m_button">
+    <input type="submit" value="Poista ketju"/>
 </form>
+
 {% elif session.user_name and session.user_role > 1%}
-<form action="/thread/{{info.id}}/delete">
-<input type="submit" value="Poista ketju"/>
+<form action="/thread/{{info.id}}/delete" class="m_button">
+    <input type="submit" value="Poista ketju"/>
 </form>
 {% endif %}
-<ul>
+
 {% for message in messages %}
-<p><b>{{ message.username}}</b>: {{ message.content }}</p>
-<p>{{message.sent_at}}</p>
-<p>+{{message.count}}</p>
-{% if message.modified > 0 %} 
-<p><i>Viestiä on muokattu</i></p>
-{% endif %}
-{% if session.user_name %}
-<form action="/{{message.id}}/upvote">
-<input type="submit" value="+1"/>
-</form>
-{% endif %}
-{% if session.user_id == message.sent_by %}
-<form action="/edit/{{message.id}}">
-<input type="submit" value="Muokkaa viestiä"/>
-</form>
-{% endif %}
-{% if session.user_name and session.user_id == message.sent_by %}
-<form action="/delete/{{message.id}}">
-<input type="submit" value="Poista viesti"/>
-</form>
-{% elif session.user_name and session.user_role > 1%}
-<form action="/delete/{{message.id}}">
-<input type="submit" value="Poista viesti"/>
-</form>
-{% endif %}
-<hr>
+
+<div class="messagerow"> 
+    <b>{{ message.username}}: </b>
+    <p class="content">{{ message.content }}</p>
+
+    {% if session.user_name %}
+    <div class="m_buttons">
+        <form action="/{{message.id}}/upvote" class="m_button">
+            <input type="submit" value="+1"/>
+        </form>
+
+        {% if session.user_id == message.sent_by %}
+        <form action="/edit/{{message.id}}" class="m_button">
+            <input type="submit" value="Muokkaa viestiä"/>
+        </form>
+        {% endif %}
+
+        {% if session.user_name and session.user_id == message.sent_by %}
+        <form action="/delete/{{message.id}}" class="m_button">
+            <input type="submit" value="Poista viesti"/>
+        </form>
+
+        {% elif session.user_name and session.user_role > 1%}
+        <form action="/delete/{{message.id}}" class="m_button">
+            <input type="submit" value="Poista viesti"/>
+        </form>
+        {% endif %}
+        
+        {% endif %}
+        <b>+{{message.count}}</b>
+        <p>{{message.sent_at}}</p>
+        {% if message.modified > 0 %} 
+        <i>Viestiä on muokattu</i>
+        {% endif %}
+    </div>
+</div>
+
 {% endfor %}
-</ul>
+
 {% if session.user_name %}
 <a href=/thread/{{info.id}}/reply>Vastaa ketjuun</a>
 {% endif %}

@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Luodaan ketjua - Forum</title>
+
 <a href="/{{topic_id}}">Palaa ketjulistaan</a>
+
 <form action="/{{topic_id}}/create_thread" method="POST" onsubmit="return check(this)">
-Otsikko: <input type="text" name="title">
-<p></p>
-Viesti: <textarea name="message"></textarea>
-<p></p>
-<input type="submit" value="Lähetä">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    Otsikko: <input type="text" name="title" class="title_field">
+    <br>
+    Viesti: <textarea name="message"></textarea>
+    <br>
+    <input type="submit" value="Lähetä">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <script>
     function check(form) {
+        passed = true
         if (form.title.value.length > 50) {
             alert("Otsikko on liian pitkä (max. 50 merkkiä)!");
-            return false;
+            passed = false;
         }
         if (form.title.value.length < 1) {
             alert("Otsikko on liian lyhyt (min. 1 merkki)!");
-            return false;
+            passed = false;
         }
         if (form.message.value.length > 5000) {
             alert("Viesti on liian pitkä (max. 5000 merkkiä)!");
-            return false;
+            passed = false;
         }
         if (form.password.value.length < 1) {
             alert("Viesti on liian lyhyt (min. 1 merkki)!");
-            return false;
+            passed = false;
         }
-        return true;
+        return passed;
     }
 </script>
