@@ -30,8 +30,8 @@
     <b>{{ message.username}}: </b>
     <p class="content">{{ message.content }}</p>
 
-    {% if session.user_name %}
     <div class="m_buttons">
+    {% if session.user_name %}
         <form action="/{{message.id}}/upvote" class="m_button">
             <input type="submit" value="+1"/>
         </form>
