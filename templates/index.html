@@ -25,11 +25,11 @@
 <tbody>
 {% for topic in topics %}
 <tr>
-	<td><a href={{topic.topic}}>{{ topic.topic }}</a></td>
+	<td><a href={{topic.id}}>{{ topic.topic }}</a></td>
 	<td>{{topic.count}}</td>
 	<td>{{topic.max}}</td>
     {% if session.user_name and session.user_role > 1 %}
-    <td><form action="/{{topic.topic}}/delete"><input type="submit" value="Poista aihealue"/></form></td>
+    <td><form action="/{{topic.id}}/delete"><input type="submit" value="Poista aihealue"/></form></td>
     {% endif %}
 </tr>
 {% endfor %}
@@ -38,3 +38,4 @@
 {% if session.user_name and session.user_role > 1 %}
 <a href="/create_topic">Luo aihealue</a>
 {% endif %}
+<a href=/search>Hae</a>

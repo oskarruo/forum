@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Ketju - Forum</title>
-<a href="/{{topicname.topic}}">Palaa ketjulistaan</a>
+<a href="/{{topic_id.id}}">Palaa ketjulistaan</a>
 <h1>{{info.threadname}}</h1> 
 {% if info.name_modified > 0 %}
 <i>Otsikkoa on muokattu</i> 
@@ -21,10 +21,16 @@
 {% endif %}
 <ul>
 {% for message in messages %}
-<p><b>{{ message.username}}</b> sanoo: {{ message.content }}</p>
-<p>{{message.sent_at}}</p> 
+<p><b>{{ message.username}}</b>: {{ message.content }}</p>
+<p>{{message.sent_at}}</p>
+<p>+{{message.count}}</p>
 {% if message.modified > 0 %} 
 <p><i>Viestiä on muokattu</i></p>
+{% endif %}
+{% if session.user_name %}
+<form action="/{{message.id}}/upvote">
+<input type="submit" value="+1"/>
+</form>
 {% endif %}
 {% if session.user_id == message.sent_by %}
 <form action="/edit/{{message.id}}">

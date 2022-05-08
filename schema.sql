@@ -7,7 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE topics (
     id SERIAL PRIMARY KEY,
-    topic TEXT UNIQUE,
+    topic TEXT,
     visible INTEGER
 );
 
@@ -30,3 +30,9 @@ CREATE TABLE messages (
     modified INTEGER,
     visible INTEGER
 );
+
+CREATE TABLE votes (
+    id SERIAL PRIMARY KEY,
+    message_id INTEGER,
+    vote_by INTEGER
+)

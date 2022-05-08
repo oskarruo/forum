@@ -1,6 +1,7 @@
 from db import db
-from flask import render_template, session, abort
+from flask import session, abort, request
 from werkzeug.security import check_password_hash, generate_password_hash
+from secrets import token_hex
 
 def login(username, password):
     sql = "SELECT id, password, role FROM users WHERE username=:username;"
@@ -14,6 +15,7 @@ def login(username, password):
             session["user_id"] = user.id
             session["user_name"] = username
             session["user_role"] = user.role
+            session["csrf_token"] = token_hex(16)
             return True
         else:
             return False
@@ -63,3 +65,7 @@ def allow_thread_edit(thread_id):
     result = db.session.execute(sql, {"thread_id":thread_id}).fetchone()
     if result.created_by != session.get("user_id"):
         return abort(403)
+
+def check_csrf():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)

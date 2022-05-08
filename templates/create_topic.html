@@ -5,4 +5,5 @@
 <form action="/create_topic", method="POST">
 Alueen nimi: <input type="text" name="title">
 <input type="submit" value="Lähetä">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>

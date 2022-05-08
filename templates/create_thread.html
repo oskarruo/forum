@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="/static/main.css">
 <title>Luodaan ketjua - Forum</title>
-<a href="/{{topic}}">Palaa ketjulistaan</a>
-<form action="/{{topic}}/create_thread" method="POST" onsubmit="return check(this)">
+<a href="/{{topic_id}}">Palaa ketjulistaan</a>
+<form action="/{{topic_id}}/create_thread" method="POST" onsubmit="return check(this)">
 Otsikko: <input type="text" name="title">
 <p></p>
 Viesti: <textarea name="message"></textarea>
 <p></p>
 <input type="submit" value="Lähetä">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 <script>
