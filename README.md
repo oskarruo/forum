@@ -20,6 +20,7 @@ Toimivat ominaisuudet
 - Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
 - Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
 - Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Käyttäjä voi myös poistaa ketjun tai viestin.
+- Käyttäjä voi antaa viesteille +1-äänen.
 - Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 
 Sovellusta voi testata [Herokussa](https://forumharjoitustyo.herokuapp.com/)
